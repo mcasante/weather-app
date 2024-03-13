@@ -1,7 +1,11 @@
 <script lang="ts" setup>
-const props = defineProps<{
-  options: string[];
-}>();
+const props = withDefaults(
+  defineProps<{
+    options: string[];
+    bgColor?: string;
+  }>(),
+  { bgColor: "bg-w-blue-200" }
+);
 
 const selected = ref<string>(props.options[0]);
 </script>
@@ -11,7 +15,7 @@ const selected = ref<string>(props.options[0]);
     <li v-for="option in options" :key="option">
       <a
         class="text-lg font-semibold px-3 py-2 rounded-[10px]"
-        :class="{ 'bg-w-blue-200': option === selected }"
+        :class="{ [bgColor]: option === selected }"
         @click="selected = option"
       >
         {{ option }}
@@ -22,5 +26,3 @@ const selected = ref<string>(props.options[0]);
     <slot :selected="selected"></slot>
   </div>
 </template>
-
-<style></style>

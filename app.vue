@@ -13,7 +13,7 @@ const locations = ref<string[]>(defaultPlaces);
 </script>
 
 <template>
-  <main class="container mx-auto py-16">
+  <main class="container mx-auto py-16 max-w-[1100px]">
     <h1 class="text-5xl font-semibold mb-14">{{ greetings }}</h1>
 
     <div>

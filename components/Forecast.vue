@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { WeatherAPIForecast } from "~/types/WeatherAPI";
+import type { WeatherAPIForecast } from "~/types/api";
 
 const props = defineProps<{
   location: string;
@@ -13,57 +13,67 @@ const {
   error,
   refresh,
 } = await useFetch<WeatherAPIForecast>(
-  "http://api.weatherapi.com/v1/forecast.json",
+  "https://api.weatherapi.com/v1/forecast.json",
   {
     query: {
       key: API_KEY,
-      q: props.location,
+      q: computed(() => props.location),
       days: 5,
-    },
-    watch: [props],
-    onResponse({ response }) {
-      console.log(response);
     },
   }
 );
 
-console.log(apiData.value);
+const data = computed(() =>
+  apiData.value ? formatWeatherData(apiData.value) : null
+);
 
-// const data = computed(() => formatWeatherData(apiData.value!));
+const now = computed(() =>
+  Epoch(Date.now() / 1000).getTime(data.value?.location.timezone || "UTC")
+);
 
-const color = (temperature: number) => {
-  if (temperature < 8) return "bg-w-blue-200";
-  if (temperature < 15) return "bg-w-green";
-  if (temperature < 24) return "bg-w-yellow";
-  return "bg-w-red-100";
-};
+const hourItems = computed(() => data.value?.day[0].hour || []);
+
+const currentIndex = useClamp(
+  hourItems.value.findIndex(
+    (hour) =>
+      Epoch(hour.time).getTime(data.value?.location.timezone || "UTC") ===
+      now.value
+  ),
+  0,
+  (data.value?.day[0].hour.length || 1) - 1
+);
 </script>
 
 <template>
-  <div class="flex gap-6">
-    <!-- <div
-      class="flex flex-col px-4 items-center py-12 px-10 rounded-3xl"
-      :class="color(3)"
-    >
-      <div
-        class="w-[100px] h-[100px] flex justify-center items-center rounded-full icon-wrapper relative"
-      >
-        {{ data.location.name }}
-        <img />
+  <div class="grid grid-cols-7 gap-6">
+    <template v-if="data">
+      <WeatherCard
+        class="col-span-2"
+        :weather="data.current"
+        :label="data.location.name"
+      />
+      <div class="col-span-5 flex flex-col justify-between">
+        <WCarousel
+          v-model:active.sync="currentIndex"
+          class="bg-repeat bg-mango-amber-100"
+          :max-width="250"
+          :items="hourItems"
+        >
+          <template #default="{ item, isSwiping, index }">
+            <WeatherTime :time="item" :timezone="data.location.timezone" />
+          </template>
+        </WCarousel>
+
+        <div class="grid grid-cols-5 gap-6">
+          <WeatherCard
+            v-for="day in data.day"
+            :key="day.date"
+            :weather="day"
+            :label="day.weekday"
+            :small="true"
+          />
+        </div>
       </div>
-      <h2 class="text-3xl font-semibold mt-4">{{ data.location.name }}</h2>
-      <p class="text-xs mt-2 text-w-gray font-semibold">
-        {{ data.current.condition.name }}
-      </p>
-    </div> -->
+    </template>
   </div>
 </template>
-
-<style lang="scss" scoped>
-.icon-wrapper::before {
-  @apply absolute inset-0 rounded-full;
-  content: "";
-  background-color: rgba(0, 0, 0, 0.3);
-  mix-blend-mode: overlay;
-}
-</style>
