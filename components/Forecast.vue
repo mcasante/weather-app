@@ -42,6 +42,14 @@ const currentIndex = useClamp(
   0,
   (data.value?.day[0].hour.length || 1) - 1
 );
+
+const wrapper = ref();
+const { width } = useElementBounding(wrapper);
+const itemWidth = computed(() => {
+  const res = Math.round(width.value / 5);
+  console.log(res);
+  return res;
+});
 </script>
 
 <template>
@@ -52,12 +60,13 @@ const currentIndex = useClamp(
         :weather="data.current"
         :label="data.location.name"
       />
-      <div class="col-span-5 flex flex-col justify-between">
+      <div ref="wrapper" class="col-span-5 flex flex-col justify-between">
         <WCarousel
           v-model:active.sync="currentIndex"
           class="bg-repeat bg-mango-amber-100"
-          :max-width="250"
+          :width="itemWidth"
           :items="hourItems"
+          :key="itemWidth"
         >
           <template #default="{ item, isSwiping, index }">
             <WeatherTime :time="item" :timezone="data.location.timezone" />

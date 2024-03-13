@@ -3,6 +3,7 @@ interface Carousel<T> {
   items: T[];
   active: number;
   maxWidth?: number;
+  width?: number;
 }
 
 const props = defineProps<Carousel<any>>();
@@ -21,7 +22,10 @@ const {
   boundings,
   itemWidth,
   containerWidth,
-} = useCarousel(carousel, numItems, { maxWidth: props.maxWidth });
+} = useCarousel(carousel, numItems, {
+  maxWidth: props.maxWidth,
+  width: props.width,
+});
 
 watch(
   () => props.active,
@@ -47,19 +51,6 @@ const containerStyles = computed(() => ({
   transform: `translateX(${translation.value}px)`,
   width: `${containerWidth.value}px`,
 }));
-
-const getSlideStyle = (index: number) => {
-  const offset = 40;
-  const diff = index - currentIndex.value;
-  const left = Math.sign(diff) === -1;
-
-  const x = -diff * (left ? offset : offset / 7);
-  return {
-    transform: isSwiping.value
-      ? "none"
-      : `translateX(${x}%) scale(${1 - -diff * 0.1})`,
-  };
-};
 </script>
 
 <template>
@@ -74,9 +65,6 @@ const getSlideStyle = (index: number) => {
         :key="index"
         class="carousel-item"
         :class="{ active: index === currentIndex }"
-        :style="{
-          ...getSlideStyle(index),
-        }"
       >
         <slot
           :item="item"
@@ -100,7 +88,8 @@ const getSlideStyle = (index: number) => {
 }
 
 .carousel-item {
-  @apply w-full pr-3 pl-6;
+  @apply w-full;
+  box-sizing: border-box;
   transition: transform 0.5s ease-in-out;
 }
 </style>
