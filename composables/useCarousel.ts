@@ -4,6 +4,7 @@ import { useClamp } from "@vueuse/math";
 interface Options {
   maxWidth?: number;
   width?: number;
+  currentIndex?: Ref<number>;
 }
 
 export function useCarousel(
@@ -11,13 +12,12 @@ export function useCarousel(
   length: Ref<number>,
   options: Options = {}
 ) {
-  const { maxWidth, width } = options;
+  const { maxWidth, width, currentIndex } = {
+    ...{ currentIndex: useClamp(0, 0, length.value - 1) },
+    ...options,
+  };
 
   const boundings = useElementBounding(target);
-
-  // const itemWidth = computed(() =>
-  //   maxWidth ? Math.min(maxWidth, boundings.width.value) : boundings.width.value
-  // );
 
   const itemWidth = computed(() => {
     if (maxWidth) {
@@ -29,10 +29,7 @@ export function useCarousel(
     }
   });
 
-  const numItems = computed(() => length.value);
-  const containerWidth = computed(() => numItems.value * itemWidth.value);
-
-  const currentIndex = useClamp(0, 0, numItems.value - 1);
+  const containerWidth = computed(() => length.value * itemWidth.value);
 
   const { isSwiping, lengthX } = useSwipe(target, {
     threshold: 10,
@@ -42,8 +39,6 @@ export function useCarousel(
 
       const draggedSlides =
         Math.round(lengthX.value / itemWidth.value + tolerance) * direction;
-
-      console.log(draggedSlides);
 
       currentIndex.value += draggedSlides;
     },

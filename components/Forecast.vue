@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { WeatherAPIForecast } from "~/types/api";
+import { useAppStore } from "~/store";
 
 const props = defineProps<{
   location: string;
@@ -27,33 +28,39 @@ const data = computed(() =>
   apiData.value ? formatWeatherData(apiData.value) : null
 );
 
+const appStore = useAppStore();
+
+watchEffect(() => {
+  if (!data.value) return;
+  appStore.setPrimaryColor(data.value.current.tempC);
+});
+
 const now = computed(() =>
   Epoch(Date.now() / 1000).getTime(data.value?.location.timezone || "UTC")
 );
 
-const hourItems = computed(() => data.value?.day[0].hour || []);
+const hourItems = computed(() => {
+  if (!data.value) return [];
+  return [...data.value.day[0].hour, ...data.value.day[1].hour];
+});
 
-const currentIndex = useClamp(
-  hourItems.value.findIndex(
+const currentIndex = useClamp(0, 0, hourItems.value.length / 2);
+
+watch(hourItems, () => {
+  currentIndex.value = hourItems.value.findIndex(
     (hour) =>
       Epoch(hour.time).getTime(data.value?.location.timezone || "UTC") ===
       now.value
-  ),
-  0,
-  (data.value?.day[0].hour.length || 1) - 1
-);
+  );
+});
 
 const wrapper = ref();
 const { width } = useElementBounding(wrapper);
-const itemWidth = computed(() => {
-  const res = Math.round(width.value / 5);
-  console.log(res);
-  return res;
-});
+const itemWidth = computed(() => Math.round(width.value / 5));
 </script>
 
 <template>
-  <div class="grid grid-cols-7 gap-6">
+  <div class="grid grid-cols-7 gap-3">
     <template v-if="data">
       <WeatherCard
         class="col-span-2"
@@ -67,13 +74,14 @@ const itemWidth = computed(() => {
           :width="itemWidth"
           :items="hourItems"
           :key="itemWidth"
+          :max="24"
         >
-          <template #default="{ item, isSwiping, index }">
+          <template #default="{ item }">
             <WeatherTime :time="item" :timezone="data.location.timezone" />
           </template>
         </WCarousel>
 
-        <div class="grid grid-cols-5 gap-6">
+        <div class="grid grid-cols-5 gap-6 mx-3">
           <WeatherCard
             v-for="day in data.day"
             :key="day.date"

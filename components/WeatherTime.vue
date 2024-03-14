@@ -5,8 +5,6 @@ const props = defineProps<{
   time: ForecastDay["hour"][0];
   timezone: string;
 }>();
-
-const color = useWeatherColor(props.time.tempC || 0);
 </script>
 
 <template>
@@ -16,8 +14,8 @@ const color = useWeatherColor(props.time.tempC || 0);
       v-text="Epoch(props.time.time).getTime(props.timezone)"
     />
     <div
-      :class="color"
-      class="w-[80px] h-[80px] rounded-full flex justify-center items-center"
+      :class="getColor(props.time.tempC)"
+      class="w-[80px] h-[80px] rounded-full flex justify-center items-center transition"
     >
       <img
         :src="props.time.condition.icon"

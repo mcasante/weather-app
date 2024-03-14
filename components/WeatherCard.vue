@@ -8,11 +8,10 @@ const props = defineProps<{
 }>();
 
 const weather = computed(() => props.weather);
-const color = useWeatherColor(weather.value.tempC);
 
 const styles = computed(() => {
   const small = {
-    card: "py-4 px-6".concat(" ", color.value),
+    card: "py-4 px-6".concat(" ", getColor(weather.value.tempC)),
     icon: {
       wrapper: "w-[50px] h-[50px]",
       image: "w-[30px] h-[30px]",
@@ -26,7 +25,10 @@ const styles = computed(() => {
   };
 
   const large = {
-    card: "px-4 items-center py-12 px-14".concat(" ", color.value),
+    card: "px-4 items-center py-12 px-14".concat(
+      " ",
+      getColor(weather.value.tempC)
+    ),
     icon: {
       wrapper: "w-[100px] h-[100px] icon-wrapper",
       image: "w-[60px] h-[60px]",
@@ -45,7 +47,7 @@ const styles = computed(() => {
 
 <template>
   <div
-    class="flex flex-col items-center rounded-3xl text-center"
+    class="flex flex-col items-center rounded-3xl text-center transition"
     :class="styles.card"
   >
     <div

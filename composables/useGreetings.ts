@@ -23,7 +23,7 @@ export const useGreetings = (userName: MaybeRef<string>) => {
     const period = periodsMap.find(findPeriodFactory(hour))?.[0];
     const periodGreet = period ? `Good ${period}` : "Hello";
 
-    return `${periodGreet}, ${toValue(userName)}`;
+    return periodGreet;
   });
 
   let interval: ReturnType<typeof setInterval>;

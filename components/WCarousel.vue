@@ -4,9 +4,15 @@ interface Carousel<T> {
   active: number;
   maxWidth?: number;
   width?: number;
+  align?: "center" | "start" | "end";
+  min?: number;
+  max?: number;
 }
 
-const props = defineProps<Carousel<any>>();
+const props = withDefaults(defineProps<Carousel<any>>(), {
+  align: "start",
+});
+
 const emit = defineEmits<{
   (event: "update:active", value: number): void;
   (event: "click", value: any): void;
@@ -25,6 +31,11 @@ const {
 } = useCarousel(carousel, numItems, {
   maxWidth: props.maxWidth,
   width: props.width,
+  currentIndex: useClamp(
+    props.active,
+    props.min ?? 0,
+    props.max ?? numItems.value - 1
+  ),
 });
 
 watch(
@@ -35,15 +46,21 @@ watch(
   { immediate: true }
 );
 
-watch(currentIndex, (value) => {
-  emit("update:active", value);
+watch(currentIndex, () => {
+  emit("update:active", currentIndex.value);
 });
 
 const translation = computed(() => {
+  console.log(currentIndex.value);
   const dragged = isSwiping.value ? lengthX.value : 0;
   const translateX = -(currentIndex.value * itemWidth.value);
-  const startPoint = boundings.width.value / 2 - itemWidth.value / 2;
-  return startPoint + translateX - dragged;
+
+  const startPoint = {
+    center: boundings.width.value / 2 - itemWidth.value / 2,
+    start: 0,
+    end: boundings.width.value - itemWidth.value,
+  };
+  return startPoint[props.align] + translateX - dragged;
 });
 
 const containerStyles = computed(() => ({
@@ -70,6 +87,7 @@ const containerStyles = computed(() => ({
           :item="item"
           :index="index"
           :is-swiping="isSwiping"
+          :active-index="currentIndex"
           @click="emit('click', item)"
         />
       </div>
