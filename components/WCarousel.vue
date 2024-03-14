@@ -51,7 +51,6 @@ watch(currentIndex, () => {
 });
 
 const translation = computed(() => {
-  console.log(currentIndex.value);
   const dragged = isSwiping.value ? lengthX.value : 0;
   const translateX = -(currentIndex.value * itemWidth.value);
 
