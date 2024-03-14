@@ -56,18 +56,21 @@ watch(hourItems, () => {
 
 const wrapper = ref();
 const { width } = useElementBounding(wrapper);
-const itemWidth = computed(() => Math.round(width.value / 5));
+const itemWidth = computed(() => Math.max(Math.round(width.value / 5), 144));
 </script>
 
 <template>
-  <div class="grid grid-cols-7 gap-3">
+  <div class="grid grid-cols-1 lg:grid-cols-7 gap-3">
     <template v-if="data">
       <WeatherCard
-        class="col-span-2"
+        class="lg:col-span-2"
         :weather="data.current"
         :label="data.location.name"
       />
-      <div ref="wrapper" class="col-span-5 flex flex-col justify-between">
+      <div
+        ref="wrapper"
+        class="lg:col-span-5 col-span-1 flex flex-col justify-between"
+      >
         <WCarousel
           v-model:active.sync="currentIndex"
           class="bg-repeat bg-mango-amber-100"
@@ -81,7 +84,7 @@ const itemWidth = computed(() => Math.round(width.value / 5));
           </template>
         </WCarousel>
 
-        <div class="grid grid-cols-5 gap-6 mx-3">
+        <div class="grid lg:grid-cols-5 gap-6 mx-3">
           <WeatherCard
             v-for="day in data.day"
             :key="day.date"

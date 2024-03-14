@@ -20,7 +20,7 @@ const props = defineProps<{
       <img
         :src="props.time.condition.icon"
         :alt="props.time.condition.name"
-        class="mx-auto"
+        class="mx-auto w-[48px] h-[48px]"
       />
     </div>
     <span class="font-semibold text-xl">{{ props.time.tempC }} °C</span>

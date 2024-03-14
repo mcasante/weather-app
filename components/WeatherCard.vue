@@ -14,11 +14,11 @@ const styles = computed(() => {
     card: "py-4 px-6".concat(" ", getColor(weather.value.tempC)),
     icon: {
       wrapper: "w-[50px] h-[50px]",
-      image: "w-[30px] h-[30px]",
+      image: "w-[48px] h-[48px]",
     },
     label: "text-xs",
     temperature: {
-      wrapper: "mt-6",
+      wrapper: "lg:mt-6",
       value: "text-xl",
       degree: "text-xl",
     },
@@ -30,14 +30,14 @@ const styles = computed(() => {
       getColor(weather.value.tempC)
     ),
     icon: {
-      wrapper: "w-[100px] h-[100px] icon-wrapper",
-      image: "w-[60px] h-[60px]",
+      wrapper: "w-[100px] h-[100px] w-[60px] h-[60px] icon-wrapper",
+      image: "w-[60px] h-[60px] w-[46px] h-[46px]",
     },
-    label: "text-3xl mt-4",
+    label: "text-xl lg:text-3xl lg:mt-4",
     temperature: {
-      wrapper: "mt-12",
-      value: "text-[120px] leading-[120px]",
-      degree: "text-3xl mt-4",
+      wrapper: "lg:mt-12",
+      value: "lg:text-[120px] text-[52px] lg:leading-[120px] leading-[47px]",
+      degree: "text-xl lg:text-3xl lg:mt-4",
     },
   };
 
@@ -47,7 +47,7 @@ const styles = computed(() => {
 
 <template>
   <div
-    class="flex flex-col items-center rounded-3xl text-center transition"
+    class="flex lg:flex-col items-center rounded-3xl lg:text-center transition"
     :class="styles.card"
   >
     <div
@@ -60,14 +60,23 @@ const styles = computed(() => {
         :alt="weather.condition.name"
       />
     </div>
-    <h2 class="font-semibold mt-2" :class="styles.label" v-text="props.label" />
-    <p
-      class="text-xs mt-2 text-w-gray font-semibold"
-      :class="{ 'mt-0': props.small }"
-      v-text="weather.condition.name"
-    />
+    <div class="ml-4 lg:ml-0">
+      <h2
+        class="font-semibold mt-2"
+        :class="styles.label"
+        v-text="props.label"
+      />
+      <p
+        class="text-xs lg:mt-2 text-w-gray font-semibold"
+        :class="{ 'mt-0': props.small }"
+        v-text="weather.condition.name"
+      />
+    </div>
 
-    <div class="flex font-semibold" :class="styles.temperature.wrapper">
+    <div
+      class="flex font-semibold ml-auto lg:ml-0"
+      :class="styles.temperature.wrapper"
+    >
       <span :class="styles.temperature.value" v-text="weather.tempC" />
       <small :class="styles.temperature.degree"> °C </small>
     </div>
