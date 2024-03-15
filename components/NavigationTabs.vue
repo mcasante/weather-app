@@ -50,7 +50,7 @@ watchEffect(() => {
 <template>
   <div>
     <div
-      class="absolute h-[38px] transition rounded-[10px] left-0 px-4 z-[-1] ease-in-out duration-300"
+      class="absolute h-[38px] transition-all rounded-[10px] left-0 px-4 z-[-1] ease-in-out duration-300"
       :class="styleStore.primaryColor"
       :style="styleStore.trackerStyle"
     />

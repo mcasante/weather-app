@@ -8,9 +8,7 @@ const location = computed(() => {
 import { useLocationStore, useUserStore } from "~/store";
 
 const userStore = useUserStore();
-
 const greetings = useGreetings();
-
 const locationStore = useLocationStore();
 
 onMounted(() => {

@@ -1,32 +1,11 @@
 <script lang="ts" setup>
-import type { WeatherAPIForecast } from "~/types/api";
 import { useStyleStore } from "~/store";
 
 const props = defineProps<{
   location: string;
 }>();
 
-const API_KEY = "17a0ea6d3af24151a23170312240403";
-
-const {
-  data: apiData,
-  pending,
-  error,
-  refresh,
-} = await useFetch<WeatherAPIForecast>(
-  "https://api.weatherapi.com/v1/forecast.json",
-  {
-    query: {
-      key: API_KEY,
-      q: computed(() => props.location),
-      days: 5,
-    },
-  }
-);
-
-const data = computed(() =>
-  apiData.value ? formatWeatherData(apiData.value) : null
-);
+const { data } = await useWeatherApi(computed(() => props.location));
 
 const styleStore = useStyleStore();
 
@@ -35,16 +14,16 @@ watchEffect(() => {
   styleStore.setPrimaryColor(data.value.current.tempC);
 });
 
-const now = computed(() =>
-  Epoch(Date.now() / 1000).getTime(data.value?.location.timezone || "UTC")
-);
-
 const hourItems = computed(() => {
   if (!data.value) return [];
   return [...data.value.day[0].hour, ...data.value.day[1].hour];
 });
 
 const currentIndex = useClamp(0, 0, hourItems.value.length / 2);
+
+const now = computed(() =>
+  Epoch(Date.now() / 1000).getTime(data.value?.location.timezone || "UTC")
+);
 
 watch(hourItems, () => {
   currentIndex.value = hourItems.value.findIndex(
