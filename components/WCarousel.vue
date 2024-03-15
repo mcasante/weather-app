@@ -1,5 +1,5 @@
-<script lang="ts" setup>
-interface Carousel<T> {
+<script lang="ts" setup generic="T">
+interface Carousel {
   items: T[];
   active: number;
   maxWidth?: number;
@@ -9,7 +9,7 @@ interface Carousel<T> {
   max?: number;
 }
 
-const props = withDefaults(defineProps<Carousel<any>>(), {
+const props = withDefaults(defineProps<Carousel>(), {
   align: "start",
 });
 

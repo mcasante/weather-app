@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { WeatherAPIForecast } from "~/types/api";
-import { useAppStore } from "~/store";
+import { useStyleStore } from "~/store";
 
 const props = defineProps<{
   location: string;
@@ -28,11 +28,11 @@ const data = computed(() =>
   apiData.value ? formatWeatherData(apiData.value) : null
 );
 
-const appStore = useAppStore();
+const styleStore = useStyleStore();
 
 watchEffect(() => {
   if (!data.value) return;
-  appStore.setPrimaryColor(data.value.current.tempC);
+  styleStore.setPrimaryColor(data.value.current.tempC);
 });
 
 const now = computed(() =>

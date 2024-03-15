@@ -15,7 +15,7 @@ const findPeriodFactory =
     }
   };
 
-export const useGreetings = (userName: MaybeRef<string>) => {
+export const useGreetings = () => {
   const currentTime = ref(new Date());
 
   const greetings = computed(() => {
