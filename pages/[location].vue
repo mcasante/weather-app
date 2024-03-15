@@ -23,7 +23,7 @@ onMounted(() => {
       {{ greetings }}, <TextInput v-model:value.sync="userStore.userName" />
     </h1>
 
-    <div>
+    <div v-if="locationStore.selected">
       <NavigationTabs
         :options="locationStore.list"
         v-model:selected.sync="locationStore.selected"

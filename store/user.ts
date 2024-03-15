@@ -1,7 +1,11 @@
-export const useUserStore = defineStore("user", () => {
-  const userName = ref("user 🌞");
+export const useUserStore = defineStore(
+  "user",
+  () => {
+    const userName = ref("user 🌞");
 
-  return {
-    userName,
-  };
-});
+    return {
+      userName,
+    };
+  },
+  { persist: true }
+);
