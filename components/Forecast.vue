@@ -52,7 +52,6 @@ const itemWidth = computed(() => Math.max(Math.round(width.value / 5), 144));
       >
         <WCarousel
           v-model:active.sync="currentIndex"
-          class="bg-repeat bg-mango-amber-100"
           :width="itemWidth"
           :items="hourItems"
           :key="itemWidth"

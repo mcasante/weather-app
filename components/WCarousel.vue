@@ -1,7 +1,7 @@
 <script lang="ts" setup generic="T">
 interface Carousel {
   items: T[];
-  active: number;
+  active: number | T;
   maxWidth?: number;
   width?: number;
   align?: "center" | "start" | "end";
@@ -11,6 +11,17 @@ interface Carousel {
 
 const props = withDefaults(defineProps<Carousel>(), {
   align: "start",
+});
+
+const innerActive = ref(0);
+
+watchEffect(() => {
+  if (typeof props.active === "number") {
+    innerActive.value = props.active;
+    return;
+  }
+
+  innerActive.value = props.items.findIndex((item) => item === props.active);
 });
 
 const emit = defineEmits<{
@@ -32,7 +43,7 @@ const {
   maxWidth: props.maxWidth,
   width: props.width,
   currentIndex: useClamp(
-    props.active,
+    innerActive,
     props.min ?? 0,
     props.max ?? numItems.value - 1
   ),
@@ -41,7 +52,7 @@ const {
 watch(
   () => props.active,
   () => {
-    currentIndex.value = props.active;
+    currentIndex.value = innerActive.value;
   },
   { immediate: true }
 );

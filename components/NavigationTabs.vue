@@ -8,11 +8,14 @@ const props = defineProps<{
   label: K;
 }>();
 
-const selected = computed(() => props.selected);
+const router = useRouter();
 
-const styleStore = useStyleStore();
-
-const targets = ref<HTMLElement[]>([]);
+const handleSwipe = (value: number) => {
+  const selected = props.options[value];
+  if (!selected) return;
+  if (typeof selected === "string") return router.push(selected);
+  router.push(selected[props.id] as string);
+};
 
 const getKey = (option: T): string => {
   if (typeof option === "string") return option;
@@ -24,47 +27,103 @@ const getLabel = (option: T): string => {
   return option[props.label] as string;
 };
 
-const { width, left } = useElementBounding(() => {
-  if (!props.selected) return;
+const { width: windowWidth } = useWindowSize();
+const wrapper = ref<HTMLElement>();
 
-  if (typeof props.selected === "string") {
-    const idx = props.options.findIndex((option) => option === props.selected);
-    return targets.value[idx];
-  }
+const { width: wrapperWidth } = useElementBounding(() => wrapper.value);
 
-  const idx = props.options.findIndex(
-    (option) => getKey(option) === getKey(props.selected)
-  );
-  return targets.value[idx];
+const isOverflowing = computed(() => {
+  return wrapperWidth.value > windowWidth.value;
 });
 
-watchEffect(() => {
-  if (!width.value || !left.value) {
-    return;
-  }
+const selected = computed(() => props.selected);
 
-  styleStore.setTrackerStyle(width.value, left.value);
-});
+const styleStore = useStyleStore();
+
+const target = ref<HTMLElement | null>();
+
+watchEffect(
+  () => {
+    if (!document) return;
+    const type = isOverflowing.value ? "carousel" : "fixed";
+    target.value = document.getElementById(`${type}-${getKey(selected.value)}`);
+  },
+  { flush: "post" }
+);
+
+const { width, left } = useElementBounding(target);
+
+const fixedTargets = ref<HTMLElement[]>([]);
+const itemWidth = computed(() =>
+  Math.max(...fixedTargets.value.map((el) => el.getBoundingClientRect().width))
+);
+
+watchEffect(
+  () => {
+    if (!width.value || !left.value) {
+      return;
+    }
+
+    const [w, l] = isOverflowing.value
+      ? [itemWidth.value, windowWidth.value / 2 - itemWidth.value / 2]
+      : [width.value, left.value];
+
+    styleStore.setTrackerStyle(w, l);
+  },
+  { flush: "post" }
+);
+
+const linkClass =
+  "text-lg font-semibold px-3 rounded-[10px] transition w-max inline-block";
 </script>
 
 <template>
-  <div>
+  <div class="overflow-hidden max-w-full">
     <div
       class="absolute h-[38px] transition-all rounded-[10px] left-0 px-4 z-[-1] ease-in-out duration-300"
       :class="styleStore.primaryColor"
       :style="styleStore.trackerStyle"
     />
-    <ul class="flex gap-2">
-      <li ref="targets" v-for="option in options" :key="getKey(option)">
+    <ul
+      ref="wrapper"
+      class="flex gap-2 pb-4 w-max"
+      :class="{
+        'absolute pointer-events-none invisible': isOverflowing,
+      }"
+    >
+      <li ref="fixedTargets" v-for="option in options" :key="getKey(option)">
         <NuxtLink
-          class="text-lg font-semibold px-3 py-2 rounded-[10px] transition"
+          :class="linkClass"
           :to="getKey(option)"
+          :id="`fixed-${getKey(option)}`"
+          class="w-max"
         >
           {{ getLabel(option) }}
         </NuxtLink>
       </li>
     </ul>
-    <div class="py-10">
+    <WCarousel
+      v-show="isOverflowing"
+      :active="selected"
+      @update:active="handleSwipe"
+      :width="itemWidth"
+      :items="options"
+      align="center"
+      class="!pt-0"
+      :key="itemWidth"
+    >
+      <template #default="{ item }">
+        <NuxtLink
+          :class="linkClass"
+          class="text-center w-full"
+          :to="getKey(item)"
+          :id="`carousel-${getKey(item)}`"
+        >
+          {{ getLabel(item) }}
+        </NuxtLink>
+      </template>
+    </WCarousel>
+    <div class="py-6">
       <slot :selected="selected"></slot>
     </div>
   </div>
