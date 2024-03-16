@@ -31,14 +31,14 @@ export function useCarousel(
 
   const containerWidth = computed(() => length.value * itemWidth.value);
 
-  const { isSwiping, lengthX } = useSwipe(target, {
+  const { isSwiping, distanceX: lengthX } = usePointerSwipe(target, {
     threshold: 10,
     onSwipeEnd: () => {
-      const direction = 1;
-      const tolerance = Math.sign(lengthX.value) * 0.7;
+      const tolerance = Math.sign(lengthX.value) * 0.4;
 
-      const draggedSlides =
-        Math.round(lengthX.value / itemWidth.value + tolerance) * direction;
+      const draggedSlides = Math.round(
+        lengthX.value / itemWidth.value + tolerance
+      );
 
       currentIndex.value += draggedSlides;
     },

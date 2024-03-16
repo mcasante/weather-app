@@ -84,7 +84,8 @@ const containerStyles = computed(() => ({
   <div ref="carousel" class="carousel">
     <div
       ref="container"
-      class="carousel-container"
+      class="carousel-container cursor-grab"
+      :class="{ 'cursor-grabbing': isSwiping }"
       :style="{ ...containerStyles }"
     >
       <div

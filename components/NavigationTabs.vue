@@ -63,7 +63,7 @@ const trackerStyle = computed(() => {
   }
 
   const [trackerWidth, translateX, leftOffset] = isOverflowing.value
-    ? [itemWidth.value, "-50%", "50%"]
+    ? [itemWidth.value + 10, "-50%", "50%"]
     : [width.value, left.value + "px", "0"];
 
   return {
@@ -75,6 +75,9 @@ const trackerStyle = computed(() => {
 
 const linkClass =
   "text-lg font-semibold px-3 rounded-[10px] transition inline-block";
+
+const hasSwiped = ref(false);
+const isMousedown = ref(false);
 </script>
 
 <template>
@@ -109,15 +112,27 @@ const linkClass =
       :width="itemWidth"
       :items="options"
       align="center"
-      class="!pt-0"
+      class="!pt-0 !pb-2"
       :key="itemWidth"
     >
-      <template #default="{ item }">
+      <template #default="{ item, isSwiping }">
         <NuxtLink
           :class="linkClass"
-          class="text-center w-full px-0"
-          :to="getKey(item)"
+          class="text-center w-full px-0 select-none"
           :id="`carousel-${getKey(item)}`"
+          @mousedown="() => (isMousedown = true)"
+          @mousemove="
+            () => {
+              if (isMousedown) hasSwiped = hasSwiped || isSwiping;
+            }
+          "
+          @mouseup="
+            () => {
+              isMousedown = false;
+              if (!hasSwiped) router.push(getKey(item));
+              hasSwiped = false;
+            }
+          "
         >
           {{ getLabel(item) }}
         </NuxtLink>

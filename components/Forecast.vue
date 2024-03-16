@@ -25,7 +25,7 @@ const now = computed(() =>
   Epoch(Date.now() / 1000).getTime(data.value?.location.timezone || "UTC")
 );
 
-watch(hourItems, () => {
+watchEffect(() => {
   currentIndex.value = hourItems.value.findIndex(
     (hour) =>
       Epoch(hour.time).getTime(data.value?.location.timezone || "UTC") ===
@@ -58,7 +58,11 @@ const itemWidth = computed(() => Math.max(Math.round(width.value / 5), 144));
           :max="24"
         >
           <template #default="{ item }">
-            <WeatherTime :time="item" :timezone="data.location.timezone" />
+            <WeatherTime
+              :time="item"
+              :timezone="data.location.timezone"
+              :now="now"
+            />
           </template>
         </WCarousel>
 

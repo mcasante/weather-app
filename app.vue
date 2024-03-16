@@ -18,7 +18,7 @@ watchEffect(() => {
 </script>
 
 <template>
-  <main class="container px-4 lg:px-0 mx-auto py-16 max-w-[1100px]">
+  <main class="container px-4 mx-auto py-4 lg:py-16 max-w-[1100px]">
     <h1 class="text-2xl lg:text-5xl font-semibold mb-14">
       {{ greetings }}, <TextInput v-model:value.sync="userStore.userName" />
     </h1>
@@ -31,7 +31,7 @@ watchEffect(() => {
         label="name"
         v-slot="{ selected: value }"
       >
-        <NuxtPage :location="value.slug" />
+        <NuxtPage page-key="unique" :location="value.slug" />
       </NavigationTabs>
     </div>
   </main>
