@@ -1,5 +1,6 @@
 <script lang="ts" setup generic="T, K extends keyof T">
 import { useStyleStore } from "~/store";
+const styleStore = useStyleStore();
 
 const props = defineProps<{
   options: T[];
@@ -38,8 +39,6 @@ const isOverflowing = computed(() => {
 
 const selected = computed(() => props.selected);
 
-const styleStore = useStyleStore();
-
 const target = ref<HTMLElement | null>();
 
 watchEffect(
@@ -58,35 +57,36 @@ const itemWidth = computed(() =>
   Math.max(...fixedTargets.value.map((el) => el.getBoundingClientRect().width))
 );
 
-watchEffect(
-  () => {
-    if (!width.value || !left.value) {
-      return;
-    }
+const trackerStyle = computed(() => {
+  if (![width.value, left.value, itemWidth.value].every(Boolean)) {
+    return { width: "0", transform: "translateX(-100%) translateY(-6px)" };
+  }
 
-    const [w, l] = isOverflowing.value
-      ? [itemWidth.value, windowWidth.value / 2 - itemWidth.value / 2]
-      : [width.value, left.value];
+  const [trackerWidth, translateX, leftOffset] = isOverflowing.value
+    ? [itemWidth.value, "-50%", "50%"]
+    : [width.value, left.value + "px", "0"];
 
-    styleStore.setTrackerStyle(w, l);
-  },
-  { flush: "post" }
-);
+  return {
+    width: `${trackerWidth}px`,
+    transform: `translateX(${translateX}) translateY(-6px)`,
+    left: leftOffset,
+  };
+});
 
 const linkClass =
-  "text-lg font-semibold px-3 rounded-[10px] transition w-max inline-block";
+  "text-lg font-semibold px-3 rounded-[10px] transition inline-block";
 </script>
 
 <template>
   <div class="overflow-hidden max-w-full">
     <div
-      class="absolute h-[38px] transition-all rounded-[10px] left-0 px-4 z-[-1] ease-in-out duration-300"
+      class="tracker absolute h-[38px] transition-all rounded-[10px] left-0 px-4 z-[-1] ease-in-out duration-300"
       :class="styleStore.primaryColor"
-      :style="styleStore.trackerStyle"
+      :style="trackerStyle"
     />
     <ul
       ref="wrapper"
-      class="flex gap-2 pb-4 w-max"
+      class="flex gap-2 w-max"
       :class="{
         'absolute pointer-events-none invisible': isOverflowing,
       }"
@@ -115,7 +115,7 @@ const linkClass =
       <template #default="{ item }">
         <NuxtLink
           :class="linkClass"
-          class="text-center w-full"
+          class="text-center w-full px-0"
           :to="getKey(item)"
           :id="`carousel-${getKey(item)}`"
         >
