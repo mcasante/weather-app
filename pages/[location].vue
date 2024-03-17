@@ -49,7 +49,7 @@ const handleDelete = (location: ILocation) => {
       </NuxtLink>
 
       <button
-        class="transition-all rounded-lg px-4 py-2 m-4 ml-0 flex items-center gap-2 bg-white m-0 px-8 py-6 rounded-l-none hover:bg-w-black border-l-4 border-w-black"
+        class="transition-all rounded-lg px-4 py-2 flex items-center gap-2 bg-white px-8 py-6 rounded-l-none hover:bg-w-black border-l-4 border-w-black"
         @click="() => handleDelete(location)"
       >
         ❌
@@ -61,16 +61,17 @@ const handleDelete = (location: ILocation) => {
     >
       <input
         class="transition-all rounded-lg px-4 py-2 m-4 hover:px-8 hover:py-6 hover:m-0 font-semibold hover:grow hover:rounded-r-none bg-white outline-none w-full"
+        placeholder="Add new location"
       />
 
       <button
-        class="transition-all rounded-lg px-4 py-2 m-4 ml-0 flex items-center gap-2 bg-white m-0 px-8 py-6 rounded-l-none hover:bg-w-green border-l-4 border-w-black w-max"
+        class="transition-all rounded-lg px-4 py-2flex items-center gap-2 bg-white px-8 py-6 rounded-l-none hover:bg-w-green border-l-4 border-w-black w-max"
       >
         🗺️
       </button>
     </div>
   </div>
-  <Forecast v-else :location="location as string" />
+  <WForecast v-else :location="location" />
 </template>
 
 <style scoped>

@@ -53,18 +53,18 @@ watchEffect(() => {
   <main class="container px-4 mx-auto py-4 lg:py-16 max-w-[1100px]">
     <h1 class="text-2xl lg:text-5xl font-semibold mb-14 flex items-center">
       <span class="inline-block min-w-max"> {{ greetings }}, </span>
-      <TextInput v-model:value="userStore.userName" />
+      <WNameInput v-model:value="userStore.userName" />
     </h1>
 
     <div class="flex" v-if="selected">
-      <NavigationTabs
+      <WTabs
         :options="navigationItems"
         v-model:selected="selected"
         id="slug"
         label="name"
       >
         <NuxtPage page-key="unique" />
-      </NavigationTabs>
+      </WTabs>
     </div>
   </main>
 </template>

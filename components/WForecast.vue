@@ -41,7 +41,7 @@ const itemWidth = computed(() => Math.max(Math.round(width.value / 5), 144));
 <template>
   <div class="grid grid-cols-1 lg:grid-cols-7 gap-3">
     <template v-if="data">
-      <WeatherCard
+      <WCard
         class="lg:col-span-2"
         :weather="data.current"
         :label="data.location.name"
@@ -58,16 +58,12 @@ const itemWidth = computed(() => Math.max(Math.round(width.value / 5), 144));
           :max="24"
         >
           <template #default="{ item }">
-            <WeatherTime
-              :time="item"
-              :timezone="data.location.timezone"
-              :now="now"
-            />
+            <WTime :time="item" :timezone="data.location.timezone" :now="now" />
           </template>
         </WCarousel>
 
         <div class="grid lg:grid-cols-5 gap-6 mx-3">
-          <WeatherCard
+          <WCard
             v-for="day in data.day"
             :key="day.date"
             :weather="day"
