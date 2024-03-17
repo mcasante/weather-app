@@ -17,15 +17,42 @@ useSeoMeta({
 });
 
 const styleStore = useStyleStore();
+const { data, error } = await useWeatherApi(location);
 
 watchEffect(() => {
-  if (location.value === "all") {
+  if (!data.value || location.value === "all") {
     styleStore.setPrimaryColor(8);
+    return;
   }
+  styleStore.setPrimaryColor(data.value.current.tempC);
 });
+
+const router = useRouter();
+
+const handleDelete = () => {
+  locationStore.deleteLocation(location.value);
+  router.push("/all");
+};
 </script>
 
 <template>
   <WOverview v-if="location === 'all'" />
-  <WForecast v-else :location="location" />
+  <template v-else>
+    <div
+      class="flex justify-center flex-wrap gap-8 py-8"
+      v-if="error?.data.code === 1006"
+    >
+      <h2 class="w-full text-center text-3xl">
+        No matching location found: {{ selected.name }}
+      </h2>
+
+      <button
+        class="mt-4 border-2 border-w-black rounded-lg px-4 py-2 hover:bg-w-black hover:text-white transition-colors duration-300 ease-in-out"
+        @click="handleDelete"
+      >
+        Delete location
+      </button>
+    </div>
+    <WForecast v-else :data="data!" />
+  </template>
 </template>
