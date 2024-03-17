@@ -19,8 +19,9 @@ watchEffect(() => {
 
 <template>
   <main class="container px-4 mx-auto py-4 lg:py-16 max-w-[1100px]">
-    <h1 class="text-2xl lg:text-5xl font-semibold mb-14">
-      {{ greetings }}, <TextInput v-model:value.sync="userStore.userName" />
+    <h1 class="text-2xl lg:text-5xl font-semibold mb-14 flex items-center">
+      <span class="inline-block min-w-max"> {{ greetings }}, </span>
+      <TextInput v-model:value.sync="userStore.userName" />
     </h1>
 
     <div v-if="locationStore.selected">
