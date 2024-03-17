@@ -54,7 +54,7 @@ const styles = computed(() => {
       :class="styles.icon.wrapper"
       class="flex justify-center items-center relative"
     >
-      <img
+      <NuxtImg
         :class="styles.icon.image"
         :src="weather.condition.icon"
         :alt="weather.condition.name"

@@ -53,8 +53,11 @@ watchEffect(
 const { width, left } = useElementBounding(target);
 
 const fixedTargets = ref<HTMLElement[]>([]);
-const itemWidth = computed(() =>
-  Math.max(...fixedTargets.value.map((el) => el.getBoundingClientRect().width))
+const itemWidth = computed(
+  () =>
+    Math.max(
+      ...fixedTargets.value.map((el) => el.getBoundingClientRect().width)
+    ) + 10
 );
 
 const trackerStyle = computed(() => {
@@ -63,7 +66,7 @@ const trackerStyle = computed(() => {
   }
 
   const [trackerWidth, translateX, leftOffset] = isOverflowing.value
-    ? [itemWidth.value + 10, "-50%", "50%"]
+    ? [itemWidth.value, "-50%", "50%"]
     : [width.value, left.value + "px", "0"];
 
   return {

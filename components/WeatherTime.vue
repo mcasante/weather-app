@@ -22,7 +22,7 @@ const label = computed(() => {
       :class="getColor(props.time.tempC)"
       class="w-[80px] h-[80px] rounded-full flex justify-center items-center transition"
     >
-      <img
+      <NuxtImg
         :src="props.time.condition.icon"
         :alt="props.time.condition.name"
         class="mx-auto w-[48px] h-[48px]"
