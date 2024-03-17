@@ -14,8 +14,6 @@ useSeoMeta({
   ogTitle: () => `Weather Forecast - ${locationStore.selected?.name}`,
   description: () => `Weather forecast for ${locationStore.selected?.name}`,
   ogDescription: () => `Weather forecast for ${locationStore.selected?.name}`,
-  // ogImage: 'https://example.com/image.png',
-  // twitterCard: 'summary_large_image',
 });
 </script>
 

@@ -26,8 +26,8 @@ useServerSeoMeta({
   ogTitle: "Weather Forecast",
   description: "Weather forecast for all locations",
   ogDescription: "Weather forecast for all locations",
-  // ogImage: 'https://example.com/image.png',
-  // twitterCard: 'summary_large_image',
+  ogImage: "/assets/weather-app-logo.svg",
+  twitterCard: "summary_large_image",
 });
 
 watchEffect(() => {
@@ -44,7 +44,7 @@ watchEffect(() => {
       <TextInput v-model:value="userStore.userName" />
     </h1>
 
-    <div v-if="locationStore.selected">
+    <div class="flex" v-if="locationStore.selected">
       <NavigationTabs
         :options="navigationItems"
         v-model:selected="locationStore.selected"
