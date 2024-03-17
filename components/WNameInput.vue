@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { useStyleStore } from "~/store";
-
 const props = defineProps<{
   value: string;
 }>();
@@ -17,7 +15,6 @@ watch(text, (value) => {
   emit("update:value", value);
 });
 
-const styleStore = useStyleStore();
 const opacity = computed(() => (focused.value ? 1 : 0));
 </script>
 
@@ -38,8 +35,14 @@ const opacity = computed(() => (focused.value ? 1 : 0));
 div {
   &:after {
     content: "";
-    background-color: v-bind("styleStore.primaryColor.hex");
     opacity: v-bind("opacity");
+    background-image: linear-gradient(
+      -45deg,
+      #c3e0fb,
+      #cdf0eb,
+      #fff4da,
+      #ffd1d1
+    );
     @apply absolute left-2 bottom-0 h-1 w-20 transition-all rounded-md;
   }
 

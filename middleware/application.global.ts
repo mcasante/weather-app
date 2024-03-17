@@ -18,7 +18,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
     )
   );
 
-  if (!found) {
+  if (!found.value) {
     return navigateTo(defaultPage);
   }
 });

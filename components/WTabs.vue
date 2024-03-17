@@ -28,13 +28,14 @@ const getLabel = (option: T): string => {
   return option[props.label] as string;
 };
 
-const { width: windowWidth } = useWindowSize();
-const wrapper = ref<HTMLElement>();
+const container = ref<HTMLElement>();
+const navWrapper = ref<HTMLElement>();
 
-const { width: wrapperWidth } = useElementBounding(() => wrapper.value);
+const { width: navWrapperWidth } = useElementSize(() => navWrapper.value);
+const { width: containerWidth } = useElementSize(() => container.value);
 
 const isOverflowing = computed(() => {
-  return wrapperWidth.value > windowWidth.value;
+  return navWrapperWidth.value > containerWidth.value;
 });
 
 const selected = computed(() => props.selected);
@@ -84,15 +85,15 @@ const isMousedown = ref(false);
 </script>
 
 <template>
-  <div class="overflow-hidden w-full">
+  <div ref="container" class="overflow-hidden w-full">
     <div
       class="tracker absolute h-[38px] transition-all rounded-[10px] left-0 px-4 z-[-1] ease-in-out duration-300"
       :class="styleStore.primaryColor!.bg"
       :style="trackerStyle"
     />
     <ul
-      ref="wrapper"
-      class="flex gap-2 w-max"
+      ref="navWrapper"
+      class="flex gap-2 w-max pb-3"
       :class="{
         'absolute pointer-events-none invisible': isOverflowing,
       }"
@@ -114,7 +115,7 @@ const isMousedown = ref(false);
       :key="itemWidth"
       :width="itemWidth"
       :items="options"
-      class="!pt-0 !pb-2"
+      class="!pt-0 !pb-3"
       align="center"
       @update:active="handleSwipe"
     >
@@ -141,7 +142,7 @@ const isMousedown = ref(false);
         </NuxtLink>
       </template>
     </WCarousel>
-    <div class="py-6">
+    <div class="py-3 pb-12 px-2 lg:px-0 h-full overflow-y-auto">
       <slot :selected="selected"></slot>
     </div>
   </div>

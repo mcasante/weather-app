@@ -50,22 +50,24 @@ watchEffect(() => {
     color="linear-gradient(135deg, #c3e0fb, #cdf0eb, #fff4da, #ffd1d1)"
     :height="8"
   />
-  <main class="container px-4 mx-auto py-4 lg:py-16 max-w-[1100px]">
-    <h1 class="text-2xl lg:text-5xl font-semibold mb-14 flex items-center">
+  <main
+    class="container max-w-[1100px] w-full h-dvh flex flex-col mx-auto py-4 lg:py-16"
+  >
+    <h1 class="text-2xl mx-4 lg:text-5xl font-semibold mb-14 flex items-center">
       <span class="inline-block min-w-max"> {{ greetings }}, </span>
       <WNameInput v-model:value="userStore.userName" />
     </h1>
 
-    <div class="flex" v-if="selected">
-      <WTabs
-        :options="navigationItems"
-        v-model:selected="selected"
-        id="slug"
-        label="name"
-      >
-        <NuxtPage page-key="unique" />
-      </WTabs>
-    </div>
+    <WTabs
+      v-if="selected"
+      :options="navigationItems"
+      v-model:selected="selected"
+      id="slug"
+      label="name"
+      class="flex-grow"
+    >
+      <NuxtPage page-key="unique" />
+    </WTabs>
   </main>
 </template>
 
@@ -76,17 +78,15 @@ body,
   overflow-x: hidden;
   width: 100%;
   overscroll-behavior: none;
+  min-height: 100dvh;
 }
 
 body {
   font-family: "Inter";
-  font-weight: 500;
-  position: relative;
-  @apply text-w-black;
+  @apply relative text-w-black font-semibold;
 }
 
 .bg-w-rainbow {
   background-image: linear-gradient(135deg, #c3e0fb, #cdf0eb, #fff4da, #ffd1d1);
-  transition: 0;
 }
 </style>
