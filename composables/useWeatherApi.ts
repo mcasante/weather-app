@@ -16,5 +16,12 @@ export const useWeatherApi = (locationSlug: MaybeRefOrGetter) => {
     transform: (data: WeatherAPIForecast): Forecast => {
       return formatWeatherData(data as WeatherAPIForecast);
     },
+    onResponseError({ response }) {
+      throw createError({
+        message: response._data.error.message,
+        statusCode: response?.status,
+        data: response._data.error,
+      });
+    },
   });
 };
