@@ -14,7 +14,7 @@ export const useLocationStore = defineStore(
     );
 
     const addLocation = (location: string, type: "slug" | "name" = "slug") => {
-      list.value.push(createLocation(location, type));
+      list.value.unshift(createLocation(location, type));
     };
 
     const deleteLocation = (locationSlug: string) => {

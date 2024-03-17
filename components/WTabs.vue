@@ -78,7 +78,7 @@ const trackerStyle = computed(() => {
 });
 
 const linkClass =
-  "text-lg font-semibold px-3 rounded-[10px] transition inline-block";
+  "text-lg font-semibold px-3 rounded-[10px] transition inline-block max-w-64 overflow-hidden whitespace-nowrap truncate";
 
 const hasSwiped = ref(false);
 const isMousedown = ref(false);
@@ -101,9 +101,9 @@ const isMousedown = ref(false);
       <li ref="fixedTargets" v-for="option in options" :key="getKey(option)">
         <NuxtLink
           :class="linkClass"
+          class="w-max"
           :to="getKey(option)"
           :id="`fixed-${getKey(option)}`"
-          class="w-max"
         >
           {{ getLabel(option) }}
         </NuxtLink>
@@ -122,7 +122,7 @@ const isMousedown = ref(false);
       <template #default="{ item, isSwiping }">
         <NuxtLink
           :class="linkClass"
-          class="text-center w-full px-0 select-none"
+          class="text-center w-full px-0 select-none whitespace-nowrap"
           :id="`carousel-${getKey(item)}`"
           @mousedown="() => (isMousedown = true)"
           @mousemove="
@@ -142,7 +142,7 @@ const isMousedown = ref(false);
         </NuxtLink>
       </template>
     </WCarousel>
-    <div class="py-3 pb-12 px-2 lg:px-0 h-full overflow-y-auto">
+    <div class="py-3 pb-24 px-2 lg:px-0 h-full overflow-y-auto">
       <slot :selected="selected"></slot>
     </div>
   </div>

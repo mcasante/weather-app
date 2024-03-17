@@ -51,7 +51,7 @@ watchEffect(() => {
     :height="8"
   />
   <main
-    class="container max-w-[1100px] w-full h-dvh flex flex-col mx-auto py-4 lg:py-16"
+    class="container max-w-[1100px] w-full h-dvh flex flex-col mx-auto pt-4 lg:py-16"
   >
     <h1 class="text-2xl mx-4 lg:text-5xl font-semibold mb-14 flex items-center">
       <span class="inline-block min-w-max"> {{ greetings }}, </span>

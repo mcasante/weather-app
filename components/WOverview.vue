@@ -18,6 +18,17 @@ const handleDelete = (location: ILocation) => {
 
 <template>
   <div class="overview">
+    <div class="card bg-w-rainbow">
+      <input
+        class="location"
+        placeholder="Add new location"
+        v-model="newLocation"
+        @keypress.enter="handleCreate"
+      />
+
+      <button @click="handleCreate">🗺️</button>
+    </div>
+
     <div
       v-for="location in locationStore.list"
       class="card bg-w-rainbow"
@@ -28,17 +39,6 @@ const handleDelete = (location: ILocation) => {
       </NuxtLink>
 
       <button @click="() => handleDelete(location)">❌</button>
-    </div>
-
-    <div class="card bg-w-rainbow">
-      <input
-        class="location"
-        placeholder="Add new location"
-        v-model="newLocation"
-        @keypress.enter="handleCreate"
-      />
-
-      <button @click="handleCreate">🗺️</button>
     </div>
   </div>
 </template>
@@ -55,6 +55,7 @@ const handleDelete = (location: ILocation) => {
 
   .location {
     @apply transition-all rounded-lg px-4 py-2 m-4 hover:px-8 hover:py-6 hover:m-0 font-semibold hover:grow hover:rounded-r-none bg-white;
+    @apply overflow-hidden max-w-full truncate;
 
     &:is(input) {
       @apply outline-none w-full;
