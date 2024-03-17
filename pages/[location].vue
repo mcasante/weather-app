@@ -38,10 +38,7 @@ const handleDelete = () => {
 <template>
   <WOverview v-if="location === 'all'" />
   <template v-else>
-    <div
-      class="flex justify-center flex-wrap gap-8 py-8"
-      v-if="error?.data.code === 1006"
-    >
+    <div class="flex justify-center flex-wrap gap-8 py-8" v-if="error">
       <h2 class="w-full text-center text-3xl">
         No matching location found: {{ selected.name }}
       </h2>
