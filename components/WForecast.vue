@@ -1,18 +1,11 @@
 <script lang="ts" setup>
-import { useStyleStore } from "~/store";
+import type { Forecast } from "~/types/model";
 
 const props = defineProps<{
-  location: string;
+  data: Forecast;
 }>();
 
-const { data } = await useWeatherApi(computed(() => props.location));
-
-const styleStore = useStyleStore();
-
-watchEffect(() => {
-  if (!data.value) return;
-  styleStore.setPrimaryColor(data.value.current.tempC);
-});
+const data = computed(() => props.data);
 
 const hourItems = computed(() => {
   if (!data.value) return [];
