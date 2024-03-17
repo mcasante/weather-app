@@ -7,7 +7,7 @@ export const useWeatherApi = (locationSlug: MaybeRefOrGetter) => {
   const API_KEY = config.public.API_KEY;
   const BASE_URL = config.public.API_BASE_URL as string;
 
-  return useFetch(BASE_URL, {
+  return useFetch(`${BASE_URL}/forecast.json`, {
     query: {
       key: API_KEY,
       q: locationSlug,

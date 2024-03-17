@@ -19,7 +19,7 @@ const label = computed(() => {
   >
     <span class="text-w-gray font-semibold text-xl" v-text="label" />
     <div
-      :class="getColor(props.time.tempC)"
+      :class="getColor(props.time.tempC).bg"
       class="w-[80px] h-[80px] rounded-full flex justify-center items-center transition"
     >
       <NuxtImg

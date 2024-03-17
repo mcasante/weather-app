@@ -11,7 +11,7 @@ const weather = computed(() => props.weather);
 
 const styles = computed(() => {
   const small = {
-    card: "py-4 px-6".concat(" ", getColor(weather.value.tempC)),
+    card: "py-4 px-6".concat(" ", getColor(weather.value.tempC).bg),
     icon: {
       wrapper: "w-[50px] h-[50px]",
       image: "w-[48px] h-[48px]",
@@ -27,7 +27,7 @@ const styles = computed(() => {
   const large = {
     card: "px-4 items-center py-12 px-14".concat(
       " ",
-      getColor(weather.value.tempC)
+      getColor(weather.value.tempC).bg
     ),
     icon: {
       wrapper: "w-[100px] h-[100px] w-[60px] h-[60px] icon-wrapper",
@@ -52,7 +52,7 @@ const styles = computed(() => {
   >
     <div
       :class="styles.icon.wrapper"
-      class="flex justify-center items-center relative"
+      class="flex justify-center items-center relative flex-shrink-0"
     >
       <NuxtImg
         :class="styles.icon.image"

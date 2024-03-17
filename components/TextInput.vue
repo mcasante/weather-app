@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useStyleStore } from "~/store";
+
 const props = defineProps<{
   value: string;
 }>();
@@ -14,15 +16,35 @@ const emit = defineEmits<{
 watch(text, (value) => {
   emit("update:value", value);
 });
+
+const styleStore = useStyleStore();
+const opacity = computed(() => (focused.value ? 1 : 0));
 </script>
 
 <template>
-  <input
-    ref="target"
-    type="text"
-    v-model="text"
-    class="editable-span transition-all px-2 block border-b-2 outline-none border-transparent w-full focus:border-b-w-blue-200"
-    placeholder="Type your name"
-    @keypress.enter="focused = false"
-  />
+  <div class="relative w-full">
+    <input
+      ref="target"
+      type="text"
+      v-model="text"
+      class="transition-all px-2 block rounded-lg outline-none border-transparent w-full"
+      placeholder="Type your name"
+      @keypress.enter="focused = false"
+    />
+  </div>
 </template>
+
+<style scoped lang="scss">
+div {
+  &:after {
+    content: "";
+    background-color: v-bind("styleStore.primaryColor.hex");
+    opacity: v-bind("opacity");
+    @apply absolute left-2 bottom-0 h-1 w-20 transition-all rounded-md;
+  }
+
+  &:hover:after {
+    opacity: 1;
+  }
+}
+</style>

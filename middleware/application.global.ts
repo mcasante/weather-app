@@ -11,9 +11,13 @@ export default defineNuxtRouteMiddleware((to, from) => {
 
   const paramLocation = to.params.location;
   const slugifiedParam = isString(paramLocation) && slugify(paramLocation);
-  const found = locationStore.list.find(
-    (location) => location.slug === slugifiedParam
-  );
+
+  const routes = [
+    "all",
+    ...locationStore.list.map((location) => location.slug),
+  ];
+
+  const found = routes.find((location) => location === slugifiedParam);
 
   if (!found) {
     return navigateTo(defaultPage);

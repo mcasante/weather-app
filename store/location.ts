@@ -3,39 +3,32 @@ import { defineStore } from "pinia";
 export const useLocationStore = defineStore(
   "location",
   () => {
-    const list = [
-      "Denver 🏔",
-      "Rio de Janeiro ⛱",
-      "Madrid 💃",
-      "Japan 🍣",
-      "Australia 🐨",
-    ].map((l) => createLocation(l, "name"));
-
-    const selected = ref();
-
-    const selectLocation = (location: string | ILocation) => {
-      if (typeof location === "string") {
-        const exists = list.find((l) => [l.slug, l.name].includes(location));
-        selected.value = exists || list[0];
-        return;
-      }
-
-      selected.value = location;
-    };
+    const list = ref(
+      [
+        "Denver 🏔",
+        "Rio de Janeiro ⛱",
+        "Madrid 💃",
+        "Japan 🍣",
+        "Australia 🐨",
+      ].map((l) => createLocation(l, "name"))
+    );
 
     const addLocation = (location: string, type: "slug" | "name" = "slug") => {
-      list.push(createLocation(location, type));
+      list.value.push(createLocation(location, type));
     };
 
     const deleteLocation = (locationSlug: string) => {
-      const index = list.findIndex((l) => l.slug === locationSlug);
-      list.splice(index, 1);
+      const index = list.value.findIndex((l) => l.slug === locationSlug);
+      list.value.splice(index, 1);
+    };
+
+    const getLocation = (locationSlug: string) => {
+      return list.value.find((l) => l.slug === locationSlug);
     };
 
     return {
-      selected,
       list,
-      selectLocation,
+      getLocation,
       addLocation,
       deleteLocation,
     };

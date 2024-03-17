@@ -84,10 +84,10 @@ const isMousedown = ref(false);
 </script>
 
 <template>
-  <div class="overflow-hidden max-w-full">
+  <div class="overflow-hidden w-full">
     <div
       class="tracker absolute h-[38px] transition-all rounded-[10px] left-0 px-4 z-[-1] ease-in-out duration-300"
-      :class="styleStore.primaryColor"
+      :class="styleStore.primaryColor!.bg"
       :style="trackerStyle"
     />
     <ul
@@ -111,12 +111,12 @@ const isMousedown = ref(false);
     <WCarousel
       v-show="isOverflowing"
       :active="selected"
-      @update:active="handleSwipe"
+      :key="itemWidth"
       :width="itemWidth"
       :items="options"
-      align="center"
       class="!pt-0 !pb-2"
-      :key="itemWidth"
+      align="center"
+      @update:active="handleSwipe"
     >
       <template #default="{ item, isSwiping }">
         <NuxtLink
