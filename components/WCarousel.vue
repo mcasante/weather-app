@@ -43,9 +43,9 @@ const {
   maxWidth: props.maxWidth,
   width: props.width,
   currentIndex: useClamp(
-    innerActive,
-    props.min ?? 0,
-    props.max ?? numItems.value - 1
+    innerActive.value,
+    () => props.min ?? 0,
+    () => props.max ?? numItems.value - 1
   ),
 });
 
