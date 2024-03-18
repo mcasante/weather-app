@@ -83,7 +83,7 @@ body,
 
 body {
   font-family: "Inter";
-  @apply relative text-w-black font-semibold;
+  @apply relative text-w-black font-semibold antialiased;
 }
 
 .bg-w-rainbow {
